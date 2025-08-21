@@ -1,5 +1,4 @@
-<script>
-    function createRandomPromise(index) {
+function createRandomPromise(index) {
       return new Promise((resolve) => {
         const delay = Math.random() * 2000 + 1000;  // 1000ms–3000ms
         const start = performance.now();
@@ -57,4 +56,3 @@
       totalRow.appendChild(totalCell2);
       output.appendChild(totalRow);
     });
-  </script>
