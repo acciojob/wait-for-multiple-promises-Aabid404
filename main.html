@@ -1,33 +1,76 @@
 <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Promise Timing Table</title>
+  <style>
+    table {
+      border-collapse: collapse;
+      width: 350px;
+      margin: 20px auto;
+      font-family: Arial, sans-serif;
+    }
+    th, td {
+      border: 1px solid #444;
+      padding: 8px;
+      text-align: center;
+    }
+    th {
+      background: #f2f2f2;
+    }
+  </style>
+</head>
+<body>
+  <table>
+    <thead>
+      <tr>
+        <th>Promise</th>
+        <th>Time Taken (Seconds)</th>
+      </tr>
+    </thead>
+    <tbody id="output">
+      <tr id="loading">
+        <td colspan="2">Loading...</td>
+      </tr>
+    </tbody>
+  </table>
 
-<html>
-  <head>
-    <link rel="stylesheet" href="styles.css" />
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-      integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD"
-      crossorigin="anonymous"
-    />
-  </head>
+  <script>
+    // Function to create a promise with random delay (1–3 seconds)
+    function createPromise(index) {
+      const delay = Math.random() * 2 + 1; // 1 to 3 seconds
+      return new Promise(resolve => {
+        setTimeout(() => {
+          resolve({ index, time: delay });
+        }, delay * 1000);
+      });
+    }
 
-  <body>
-    <!-- the entire body must be written by student -->
-    <table class="table table-striped table-hover table-bordered">
-      <thead>
-        <tr>
-          <th>Promise Name</th>
-          <th>Time taken (s)</th>
-        </tr>
-      </thead>
-      <tbody id="output"></tbody>
-    </table>
+    // Track start time for total duration
+    const startTime = performance.now();
 
-    <script type="text/javascript" src="./script.js"></script>
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
-      integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
-      crossorigin="anonymous"
-    ></script>
-  </body>
+    // Create 3 promises
+    const promises = [createPromise(1), createPromise(2), createPromise(3)];
+
+    Promise.all(promises).then(results => {
+      const endTime = performance.now();
+      const totalTime = ((endTime - startTime) / 1000).toFixed(3);
+
+      const output = document.getElementById("output");
+      output.innerHTML = ""; // remove "Loading..." row
+
+      // Add each promise result
+      results.forEach(result => {
+        const row = document.createElement("tr");
+        row.innerHTML = `<td>Promise ${result.index}</td><td>${result.time.toFixed(3)}</td>`;
+        output.appendChild(row);
+      });
+
+      // Add total row
+      const totalRow = document.createElement("tr");
+      totalRow.innerHTML = `<td>Total</td><td>${totalTime}</td>`;
+      output.appendChild(totalRow);
+    });
+  </script>
+</body>
 </html>
